@@ -8,26 +8,33 @@ import threeSAT.ThreeSAT;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class Clique.
+ * The Class Clique, which represents a Clique problem.
  */
 public class Clique {
-	
-	/** The node groups. */
+
+	/** The node groups. Each of them will represent a clause of a 3-SAT problem */
 	Vector<Vector<Literal>> nodeGroups;
-	
-	/** The literal index. */
+
+	/**
+	 * The literal index. A vector in which the index of all the nodes involved in a
+	 * potential Clique are stored through resolution
+	 */
 	Vector<Integer> literalIndex;
-	
-	/** The connected. */
+
+	/** A matrix which indicates whether two nodes are connected or not. */
 	boolean[][] connected;
-	
-	/** The solution. */
+
+	/**
+	 * The solution. A vector with all the nodes/literals involved in a successful
+	 * Clique
+	 */
 	Vector<Literal> solution;
 
 	/**
-	 * Instantiates a new clique.
+	 * Instantiates a new Clique problem.
 	 *
-	 * @param threeSAT the three SAT
+	 * @param threeSAT
+	 *            the 3-SAT problem we want to solve
 	 */
 	public Clique(ThreeSAT threeSAT) {
 		nodeGroups = new Vector<Vector<Literal>>();
@@ -38,9 +45,9 @@ public class Clique {
 	}
 
 	/**
-	 * Solve.
+	 * Solve. Method used for calculating a solution to this Clique problem.
 	 *
-	 * @return the vector
+	 * @return the vector of literals/nodes involved in a successful Clique
 	 */
 	public Vector<Literal> solve() {
 		solution = new Vector<Literal>();
@@ -49,6 +56,13 @@ public class Clique {
 			for (int n = 0; n < connected.length; n++)
 				connected[m][n] = false;
 
+		/*
+		 * After proper initialization of all the variables, the connections matrix is
+		 * created. If two nodes have different IDs, they're connected. If two nodes
+		 * with the same ID share the same negation value (true/false), they're
+		 * connected. Each node is compared with all the nodes of all the node groups in
+		 * front of it.
+		 */
 		for (int i = 0; i < nodeGroups.size(); i++) {
 			for (int j = 0; j < 3; j++) {
 				for (int k = i + 1; k < nodeGroups.size(); k++) {
@@ -68,28 +82,33 @@ public class Clique {
 			}
 		}
 
+		// We try to find a successful Clique starting from the 3 different nodes of the
+		// first node group. If no Clique is found starting with one, it's tried again
+		// with the next
 		literalIndex = new Vector<Integer>();
 		for (int i = 0; i < 3; i++) {
 			literalIndex.add(i);
 			if (deepDive())
 				break;
+			literalIndex.remove(0);
 		}
+		// All nodes of the solution found are compiled in a vector of literals
 		for (int i = 0; i < nodeGroups.size(); i++)
 			solution.add(
 					nodeGroups.get((literalIndex.get(i) - literalIndex.get(i) % 3) / 3).get(literalIndex.get(i) % 3));
-
 		return solution;
 	}
 
 	/**
-	 * Deep dive.
+	 * Deep dive. A recursive function to navigate through the node groups searching
+	 * for a successful clique.
 	 *
 	 * @return true, if successful
 	 */
 	private boolean deepDive() {
 		boolean nice = true;
-		for (int i = literalIndex.lastElement() + 3 - literalIndex.lastElement() % 3; i < literalIndex.lastElement() + 6
-				- literalIndex.lastElement() % 3; i++) {
+		int lastElement = literalIndex.lastElement();
+		for (int i = lastElement + 3 - lastElement % 3; i < lastElement + 6 - lastElement % 3; i++) {
 			nice = true;
 			for (Integer aux : literalIndex) {
 				if (!connected[aux][i]) {
@@ -99,12 +118,13 @@ public class Clique {
 			}
 			if (nice) {
 				literalIndex.add(i);
-				if (i + 3 >= connected.length)
+				if (i + 3 >= connected.length) {
 					return true;
-				else if (deepDive()) {
+				} else if (deepDive()) {
 					return true;
-				} else
+				} else {
 					literalIndex.remove(literalIndex.size() - 1);
+				}
 			}
 		}
 		return false;

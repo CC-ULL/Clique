@@ -3,18 +3,18 @@ import java.util.Vector;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class ThreeSAT.
+ * The Class ThreeSAT, which represents a 3-SAT problem.
  */
 public class ThreeSAT {
 	
-	/** The literals. */
+	/** The literals involved in the problem. */
 	Vector<Literal> literals;
 	
-	/** The clauses. */
+	/** The clauses of the problem. */
 	Vector<Clause> clauses;
 	
 	/**
-	 * Instantiates a new three SAT.
+	 * Instantiates a new 3-SAT problem.
 	 */
 	public ThreeSAT() {
 		literals = new Vector<Literal>();
@@ -22,7 +22,7 @@ public class ThreeSAT {
 	}
 	
 	/**
-	 * Adds a new literal.
+	 * Adds a new literal to the problem.
 	 *
 	 * @param id the id
 	 */
@@ -31,9 +31,9 @@ public class ThreeSAT {
 	}
 	
 	/**
-	 * Adds a new clause.
+	 * Adds a new clause to the problem.
 	 *
-	 * @param clause the clause
+	 * @param clause the new clause
 	 */
 	public void addClause(String clause) {
 		String clauseLiterals[] = clause.split("\\s+");
@@ -49,7 +49,7 @@ public class ThreeSAT {
 	}
 	
 	/**
-	 * Gets the clauses.
+	 * Gets the clauses of the problem.
 	 *
 	 * @return the clauses
 	 */
@@ -58,8 +58,9 @@ public class ThreeSAT {
 	}
 	
 	/**
-	 * Gets the literals.
-	 *
+	 * Gets the literals involved in this problem.
+	 * (Not used in the Clique demonstration)
+	 * 
 	 * @return the literals
 	 */
 	public Vector<Literal> getLiterals(){
@@ -67,7 +68,7 @@ public class ThreeSAT {
 	}
 	
 	/**
-	 * Converts the 3-SAT problem into a string
+	 * Converts the 3-SAT problem into a string of format (l1+l2+l3)*(l2+l3+l1)...
 	 * 
 	 * @return string
 	 */

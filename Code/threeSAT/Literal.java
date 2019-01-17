@@ -6,10 +6,10 @@ package threeSAT;
  */
 public class Literal {
 	
-	/** The negated. */
+	/** The negated variable, which indicates whether the literal is negated or not. */
 	private boolean negated;
 	
-	/** The id. */
+	/** The id, which never includes the negation. */
 	private String id;
 	
 	
@@ -17,7 +17,7 @@ public class Literal {
 	 * Instantiates a new literal.
 	 *
 	 * @param id the id
-	 * @param negated the negated
+	 * @param negated whether it's negated or not
 	 */
 	Literal(String id, boolean negated){
 		this.id = id;
@@ -25,16 +25,16 @@ public class Literal {
 	}
 	
 	/**
-	 * Checks if is negated.
+	 * Checks if it's negated.
 	 *
-	 * @return true, if is negated
+	 * @return true, if it's negated
 	 */
 	public boolean isNegated() {
 		return negated;
 	}
 	
 	/**
-	 * Gets the id.
+	 * Gets the id (without negation).
 	 *
 	 * @return the id
 	 */
@@ -43,7 +43,7 @@ public class Literal {
 	}
 	
 	/**
-	 * Converts the literal into a string
+	 * Converts the literal into a string, joining the negation and the id
 	 * 
 	 * @return string
 	 */

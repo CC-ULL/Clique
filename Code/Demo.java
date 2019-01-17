@@ -8,11 +8,7 @@ import javax.swing.JFrame;
 
 import clique.Clique;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
-import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.OrderedSparseMultigraph;
-import edu.uci.ics.jung.graph.SortedSparseMultigraph;
-import edu.uci.ics.jung.graph.SparseGraph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
@@ -28,9 +24,13 @@ public class Demo {
 
 	/**
 	 * The main method.
+	 * 
+	 * Here the input file will be read and processed to create a 3-SAT instance.
+	 * Then, after printing the 3-SAT problem, we'll translate it into a Clique problem, solve it, and print it.
+	 * With calculations over, the program proceeds to represent the problem's complete graph.
 	 *
-	 * @param args the arguments
-	 * @throws NumberFormatException the number format exception
+	 * @param args the arguments. [0] should be the path to the input file.
+	 * @throws NumberFormatException Signals that a number format exception has occurred.
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void main(String[] args) throws NumberFormatException, IOException {
@@ -39,8 +39,8 @@ public class Demo {
 
 		FileReader input = new FileReader(args[0]);
 		BufferedReader reader = new BufferedReader(input);
+		// We read how many clauses there are in order to read them smoothly
 		int nClauses = Integer.parseInt(reader.readLine());
-		// System.out.printf(""+nClauses);
 		for (int i = 0; i < nClauses; i++)
 			threeSAT.addClause(reader.readLine());
 		reader.close();
@@ -48,13 +48,13 @@ public class Demo {
 		System.out.printf(threeSAT.toString());
 
 		Clique clique = new Clique(threeSAT);
-		System.out.printf("    " + clique.solve().toString());
+		System.out.printf("\n" + clique.solve().toString());
 
 		createAndShowGUI(threeSAT, clique);
 	}
 
 	/**
-	 * Creates the and show GUI.
+	 * Creates and shows the GUI where the graph will be represented.
 	 *
 	 * @param threeSAT the three SAT
 	 * @param clique the clique
@@ -79,7 +79,7 @@ public class Demo {
 	}
 
 	/**
-	 * Creates the graph.
+	 * Creates the graph with help of the JUNG library.
 	 *
 	 * @param clique the clique
 	 * @return the graph
@@ -97,7 +97,7 @@ public class Demo {
 		for (int i = 0; i < numVertices; i++) {
 			for (int j = i + 1; j < numVertices; j++) {
 				if (connections[i][j])
-					g.addEdge(""+i+j, "" + ((i - i % 3)/3) + "." + nodeGroups.get((i - i % 3)/3).get(i % 3).toString(),
+					g.addEdge(""+i+"."+j, "" + ((i - i % 3)/3) + "." + nodeGroups.get((i - i % 3)/3).get(i % 3).toString(),
 							"" + ((j - j % 3)/3) + "." + nodeGroups.get((j - j % 3)/3).get(j % 3).toString());
 			}
 		}
