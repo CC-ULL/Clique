@@ -108,25 +108,37 @@ public class Clique {
 	private boolean deepDive() {
 		boolean nice = true;
 		int lastElement = literalIndex.lastElement();
+		// Look for a nice node in the next node group
 		for (int i = lastElement + 3 - lastElement % 3; i < lastElement + 6 - lastElement % 3; i++) {
 			nice = true;
+			/* Check if the actual node connects with all the previously 
+			 * selected nodes, and discard it if a connection is missing */
 			for (Integer aux : literalIndex) {
 				if (!connected[aux][i]) {
 					nice = false;
 					break;
 				}
 			}
+			/* If the node looks nice, it's added to the potential solution */
 			if (nice) {
 				literalIndex.add(i);
+				/* If it's from the last group of nodes, a successful
+				 * Clique has been found*/
 				if (i + 3 >= connected.length) {
 					return true;
+				/* If it's not, the function is called again to work
+				 * with the next group of nodes */
 				} else if (deepDive()) {
 					return true;
+				/* If, after calling itself, no Clique is found, the last
+				 * node is discarded for checking the next one*/
 				} else {
 					literalIndex.remove(literalIndex.size() - 1);
 				}
 			}
 		}
+		/* If none of the nodes of the group are valid, the program returns to the
+		 * last node group and discards the selected node */
 		return false;
 	}
 
